@@ -21,7 +21,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           # 明确指定要检出的分支
-          ref: 'gh-pages' # <-- 请将 'gh-pages' 替换为你的目标分支名
+      
 
       - name: Archive old notes
         id: archive
