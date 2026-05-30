@@ -104,7 +104,32 @@ jobs:
               echo "错误: 下载 RSS Feed 失败。wget 返回错误码 $?。"
             fi
           fi
+                - name: Commit and push changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
           
+          # 只在目录存在时才添加
+          if [ -d "today" ]; then
+            git add today/
+          fi
+          if [ -d "daily" ]; then
+            git add daily/
+          fi
+          
+          if [ -f "rss.xml" ]; then
+            git add rss.xml
+          else
+            echo "rss.xml 未找到，不添加到提交中。"
+          fi
+
+          if git diff --staged --quiet; then
+            echo "没有文件变更，无需提交。"
+          else
+            echo "检测到文件变更，正在提交..."
+            git commit -m "docs: 自动构建日刊并归档旧月份 (`date -u`)"
+            git push
+          fi
            - name: Commit and push changes
         run: |
           git config --local user.email "action@github.com"
