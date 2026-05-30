@@ -105,12 +105,19 @@ jobs:
             fi
           fi
           
-      - name: Commit and push changes
+           - name: Commit and push changes
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           
-          git add today/ daily/
+          # 只在目录存在时才添加
+          if [ -d "today" ]; then
+            git add today/
+          fi
+          if [ -d "daily" ]; then
+            git add daily/
+          fi
+          
           if [ -f "rss.xml" ]; then
             git add rss.xml
           else
@@ -122,5 +129,7 @@ jobs:
           else
             echo "检测到文件变更，正在提交..."
             git commit -m "docs: 自动构建日刊并归档旧月份 (`date -u`)"
+            git push
+          fi
             git push
           fi
